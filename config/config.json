@@ -1,0 +1,24 @@
+{
+  "llm": {
+    "base_url": "https://generativelanguage.googleapis.com/v1beta/openai/",
+    "api_key": "xxx",
+    "model": "gemini-3-flash-preview",
+    "max_tokens": 65536,
+    "temperature": 0.1
+  },
+  "deepseek_ocr2": {
+    "runtime_root": "utils/deepseek_ocr2_runtime",
+    "model_path": "/.../Model_Weight/DeepSeek-OCR-2",
+    "gpu_memory_utilization": 0.9
+  },
+  "gpt-5.4": {
+    "model": "gpt-5.4",
+    "api_key": "your_api_key_here",
+    "base_url": "https://api.openai.com/v1"
+  },
+  "gemini-3.1-pro-preview": {
+    "model": "gemini-3.1-pro-preview",
+    "api_key": "xxx",
+    "base_url": "https://generativelanguage.googleapis.com/v1beta/openai/"
+  }
+}

@@ -1,0 +1,226 @@
+﻿# Construction pipeline prompts.
+# Runtime prompts are mirrored in construction_pipeline/02-QA_Generation.py.
+
+casequestion_extract_seed_qa_prompts:
+  unified_extraction:
+    system_prompt: |-
+      You are a senior dental clinician tasked with crafting benchmark-grade case-based clinical reasoning questions from dental case reports for LLM evaluation. Adhere to ALL instructions precisely. Every output must: 1) Stay 100% faithful to the provided case report (no external facts). 2) Craft exactly ONE seed question about the central documented diagnosis, treatment decision, management rationale, complication, or outcome in the case. 3) Provide exactly 5 source-grounded key points that directly support the expected answer. 4) Use PRECISE and CONCISE language that is easy to understand. 5) Redact any patient-identifiable information. 6) Do not add clinical recommendations beyond what the case report explicitly supports. 7) Ensure outputs stand alone (benchmark users will NOT see the original paper). Return results strictly in valid JSON format.
+    user_template: |-
+      Analyze the following dental case report and complete ALL requested items in a single response.
+
+      INPUT CASE REPORT:
+      {content}
+
+      OBJECTIVES:
+      1. Produce exactly ONE "seed_question" that asks about a central documented clinical reasoning point in this case report.
+      2. Produce exactly {key_point_count} "key_points" that directly support the expected answer using only source-grounded case facts.
+
+      === SEED QUESTION REQUIREMENTS ===
+      - Self-contained: Include only patient demographics, presentation, diagnostics, history, procedures, and outcomes that are explicitly stated in the source.
+      - Do not invent missing details. If the source does not report a detail, omit it rather than guessing.
+      - Focus on one documented clinical reasoning target: diagnosis, etiology, treatment selection, management rationale, complication prevention, prognosis, or outcome interpretation.
+      - Ask the learner to perform exactly ONE task, such as explaining the documented diagnosis, justifying the documented treatment plan, identifying the key risk/benefit considerations, or interpreting the outcome.
+      - Use precise, concise clinical terminology that is easy to understand.
+      - Avoid yes/no phrasing and multi-part requests.
+      - The question should be challenging enough to require synthesis of multiple case facts, but it must remain answerable from the report.
+      - Reference the source location that grounds the question using real section titles/headings or nearby text cues from the Markdown. Do not invent paragraph numbers if the source does not provide them.
+      - Explain why this is a clinically meaningful reasoning point for this case.
+
+      === KEY POINT REQUIREMENTS ===
+      For each of the {key_point_count} key points:
+      - Quote or paraphrase ONLY information present in the case report.
+      - Reference the exact section title, heading, table, figure caption, or nearby Markdown cue where the point appears. Do not invent paragraph numbers.
+      - Explain how the point supports the expected answer to the seed question.
+      - Collectively cover the most relevant evidence for the question, such as presentation, diagnostics, etiology, treatment rationale, procedure details, complications, follow-up, and outcome. Include systemic modifiers or patient-centered considerations only when they are explicitly reported.
+      - Use precise, concise language that is easy to understand.
+
+
+      === OUTPUT FORMAT ===
+      Return valid JSON only in the following structure:
+      {
+          "seed_question": {
+              "question": "[Precise, concise, self-contained open-ended question (3-4 sentences)]",
+              "location": "[Section/paragraph reference where the question appears]",
+              "explanation": "[Why this is the most clinically significant decision point (1 sentence)]"
+          },
+          "key_points": [
+              {
+                  "content": "[Precise, concise key point from case report]",
+                  "location": "[Section/paragraph reference where the key point appears]",
+                  "explanation": "[Why this point is critical for answering the seed question (2-3 sentences)]"
+              }
+          ]
+      }
+
+casequestion_validate_qa_prompts:
+  benchmark_validation:
+    system_prompt: |-
+      You are a senior dental education quality assessor. Your job is to rigorously audit open-ended benchmark questions (seed question + key points) before they enter evaluation suites. Judge each item on correctness/traceability, difficulty, and answerability using only the provided source document. Be strict, cite concrete reasons, and return results strictly in JSON format.
+    user_template: |-
+      You are a HIGHLY CRITICAL senior dental education assessor.
+
+      === SOURCE DOCUMENT CONTENT ===
+      {md_content}
+
+      === QUESTION UNDER REVIEW ===
+      {seed_question}
+
+      === CLAIMED KEY POINTS (EXPECTED ANSWER ELEMENTS) ===
+      {key_points}
+
+      === EVALUATION CRITERIA (STRICT MODE) ===
+
+      1. **CORRECTNESS (Traceability)**:
+         - Core facts (patient demographics, diagnosis, treatment outcomes) must be verifiable in the source document
+         - Reasonable paraphrasing and clinical terminology substitution is ACCEPTABLE if meaning is preserved
+         - Minor extrapolations that logically follow from source content are ACCEPTABLE
+         - Fabricated numbers, contradictory claims, or invented procedures = FAIL
+         - Do not fail solely because a location label is approximate, if the clinical content is traceable to the source
+         - Standard: Substantial source-grounded accuracy with allowance for reasonable clinical interpretation
+
+      2. **DIFFICULTY (Challenge Level)**:
+         - Must require synthesis of at least 2 source-supported case facts
+         - Should test clinical reasoning, treatment rationale, risk/benefit interpretation, diagnosis, complication prevention, prognosis, or outcome interpretation
+         - Pure recall of one isolated fact = FAIL
+         - Do not require the case to contain a rare life-threatening dilemma; ordinary but clinically meaningful case reasoning is acceptable
+         - Standard: Suitable for evaluating dental clinical reasoning beyond simple memorization
+
+      3. **ANSWERABILITY (Clarity & Unambiguity)**:
+         - Stem must be self-contained enough for benchmark users who will not see the original paper
+         - The expected answer must be recoverable from the five key points
+         - Real-world alternative treatments or diagnoses do NOT cause failure if the question clearly asks for the documented case-based rationale
+         - Vague, multi-task, or internally conflicting stems = FAIL
+
+      === YOUR TASK ===
+      Evaluate whether the QUESTION + KEY POINTS satisfy all three criteria using only the SOURCE DOCUMENT. Cite concrete reasons for every score.
+      Return JSON format:
+      {
+          "correctness": {
+              "score": 0 or 1,
+              "reasoning": "Detailed explanation with specific examples from source document or reasons for failure"
+          },
+          "difficulty": {
+              "score": 0 or 1,
+              "reasoning": "Why this is/isn't sufficiently challenging for experienced professionals"
+          },
+          "answerability": {
+              "score": 0 or 1,
+              "reasoning": "Assessment of clarity and potential for expert consensus"
+          }
+      }
+
+tag:
+  question_tagging_for_caserepo:
+    system_prompt: |-
+      You are a professional dental education assessment expert. Your task is to analyze dental exam questions and assign them two key tags.
+
+      ## Label 1: Dental Discipline (Select one number from 1 to 14)
+      Based on the main content of the question, select the most appropriate category and respond with only the number:
+      1. Caries, Tooth Defects & Trauma
+      2. Pulp & Periapical Diseases
+      3. Periodontal & Peri-implant Diseases
+      4. Oral Mucosal Diseases
+      5. Dentoalveolar Surgery
+      6. Maxillofacial Diseases & Surgery
+      7. Anesthesia & Medical Emergencies
+      8. Oral & Maxillofacial Radiology
+      9. Conventional Prosthodontics
+      10. Oral Implantology
+      11. Pediatric Dentistry
+      12. Orthodontics
+      13. Basic Sciences & Preventive Dentistry
+      14. Systemic Health, Pharmacology & Safety
+
+      ## Label 2: Reasoning Level (Select L1, L2, or L3)
+      Classify the dental question into one of three levels based on the type of reasoning required to answer it.
+
+      ### L1 — Knowledge Recall
+      - The question primarily tests factual knowledge, definitions, concepts, classifications, mechanisms, or direct recall.
+      - It does not require meaningful reasoning based on a specific patient case.
+      - Any question focused primarily on knowledge assessment should be classified as L1.
+      - Questions that require more than knowledge recall, such as patient-specific clinical reasoning, should not be classified as L1.
+
+      ### L2 — Routine Reasoning
+      - The question requires more than factual knowledge and involves a certain degree of clinical reasoning and interpretation.
+      - The final answer mainly depends on the core clinical information of the case, such as symptoms, signs, examination findings, imaging features, or typical disease characteristics.
+      - Individualized patient factors should be absent or play only a minor role in the final decision-making process.
+
+      ### L3 — Individualized Reasoning
+      - The question requires reasoning based on a patient case.
+      - The final answer depends not only on the core clinical information, but also on individualized patient factors.
+      - Individualized information must be considered to reach the final diagnosis, differential diagnosis, risk assessment, management decision, or treatment choice.
+
+      ## Core Distinction Between L2 and L3
+      - L2: The question can be answered mainly based on the core clinical findings of the case; individualized patient factors are not essential to the final answer.
+      - L3: Individualized patient factors are required to answer the question; without considering them, the final judgment would be incomplete, inaccurate, or clinically inappropriate.
+
+      ## Response Format (Brief!)
+      Only respond with two lines, one answer per line:
+      [number from 1-14]
+      [L1/L2/L3]
+
+      Example:
+      8
+      L2
+    user_template: |-
+      Please analyze the following dental question:
+      {question_text}
+  question_tagging_for_saq_or_mcq:
+    system_prompt: |-
+      You are a professional dental education assessment expert. Your task is to analyze dental exam questions and assign them two key tags.
+
+      ## Label 1: Dental Discipline (Select one number from 1 to 14)
+      Based on the main content of the question, select the most appropriate category and respond with only the number:
+      1. Caries, Tooth Defects & Trauma
+      2. Pulp & Periapical Diseases
+      3. Periodontal & Peri-implant Diseases
+      4. Oral Mucosal Diseases
+      5. Dentoalveolar Surgery
+      6. Maxillofacial Diseases & Surgery
+      7. Anesthesia & Medical Emergencies
+      8. Oral & Maxillofacial Radiology
+      9. Conventional Prosthodontics
+      10. Oral Implantology
+      11. Pediatric Dentistry
+      12. Orthodontics
+      13. Basic Sciences & Preventive Dentistry
+      14. Systemic Health, Pharmacology & Safety
+
+      ## Label 2: Reasoning Level (Select L1, L2, or L3)
+      Classify the dental question into one of three levels based on the type of reasoning required to answer it.
+
+      ### L1 — Knowledge Recall
+      - The question primarily tests factual knowledge, definitions, concepts, classifications, mechanisms, or direct recall.
+      - It does not require meaningful reasoning based on a specific patient case.
+      - Any question focused primarily on knowledge assessment should be classified as L1.
+      - Questions that require more than knowledge recall, such as patient-specific clinical reasoning, should not be classified as L1.
+
+      ### L2 — Routine Reasoning
+      - The question requires more than factual knowledge and involves a certain degree of clinical reasoning and interpretation.
+      - The final answer mainly depends on the core clinical information of the case, such as symptoms, signs, examination findings, imaging features, or typical disease characteristics.
+      - Individualized patient factors should be absent or play only a minor role in the final decision-making process.
+
+      ### L3 — Individualized Reasoning
+      - The question requires reasoning based on a patient case.
+      - The final answer depends not only on the core clinical information, but also on individualized patient factors.
+      - Individualized information must be considered to reach the final diagnosis, differential diagnosis, risk assessment, management decision, or treatment choice.
+
+      ## Core Distinction Between L2 and L3
+      - L2: The question can be answered mainly based on the core clinical findings of the case; individualized patient factors are not essential to the final answer.
+      - L3: Individualized patient factors are required to answer the question; without considering them, the final judgment would be incomplete, inaccurate, or clinically inappropriate.
+
+      ## Ground Truth
+      You will also be provided with the ground truth answer. Use this to better understand the question's context and difficulty level, but make your own independent assessment.
+
+      ## Response Format (Brief!)
+      Only respond with two lines, one answer per line:
+      [number from 1-14]
+      [L1/L2/L3]
+
+      Example:
+      8
+      L2
+    user_template: |-
+      Please analyze the following dental question and its ground truth answer:
+      {question}
+      {answer}

@@ -1,0 +1,28 @@
+# Created: 2026-02-01
+# Modified: 2026-05-22
+# Purpose: Core Python dependencies for GlobalDentBench construction, evaluation, risk analysis, and result analysis.
+#
+# Notes:
+# - Install requirements-ocr.txt only when running DeepSeekOCR-based PDF/image OCR.
+# - Pandoc is an external command-line tool, not a Python package. Install it separately if converting Word/RTF/ODT/HTML via pandoc.
+
+# Core utilities
+requests>=2.28.0
+tqdm>=4.64.0
+PyYAML>=6.0.0
+
+# Image handling for API image payloads and non-OCR document utilities
+Pillow>=9.0.0
+
+# Spreadsheet and table conversion
+pandas>=1.5.0
+tabulate>=0.9.0
+openpyxl>=3.1.0
+xlrd>=2.0.1
+
+# HTML/XML parsing
+beautifulsoup4>=4.11.0
+lxml>=4.9.0
+
+# Token counting / chunking
+tokenizers>=0.15.0
