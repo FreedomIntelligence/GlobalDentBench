@@ -105,7 +105,7 @@ If you use this code or refer to our method, please cite our paper. This is very
 
 ## 📮 Contact
 
-If you have any questions, please contact us🧐: zhenyangcai@link.cuhk.edu.cn,junjie88@connect.hku.hk
+If you have any questions, please contact us🧐: [zhenyangcai@link.cuhk.edu.cn][junjiezhao@connect.hku.hk]
 
 ## 📄 License
 This project is open-sourced under the MIT License.
