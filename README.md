@@ -83,9 +83,13 @@ Stage 3 produces a single benchmark JSON; stage 4–5 add evaluation, risk, and 
 
 ##  📖 About Us
 We are from:
-- The Chinese University of Hong Kong, Shenzhen 香港中文大学（深圳）
 - Faculty of Dentistry, The University of Hong Kong 香港大学牙医学院
+- The Chinese University of Hong Kong, Shenzhen 香港中文大学（深圳）
 - Shenzhen Stomatology Hospital (Pingshan) of Southern Medical University 南方医科大学深圳口腔医院（坪山）
+- Peking University 北京大学
+- Peking-Tsinghua Center for Life Sciences 北大清华生命科学联合中心
+- National Biomedical Imaging Center 国家生物医学成像中心
+- New Cornerstone Science Laboratory 新基石科学实验室
+- Mayo Clinic 梅奥诊所
+- LMU University Hospital 德国慕尼黑大学医院 
 - Freedom AI 深圳自由动脉科技有限公司
-
-特别鸣谢智谱华章科技提供支持。
