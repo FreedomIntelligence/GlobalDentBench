@@ -1,4 +1,10 @@
-# GlobalDentBench
+# Towards Multimodal LLMs for Traditional Chinese Medicine
+
+<div align="center">
+<h3>
+  GlobalDentBench
+</h3>
+</div>
 
 A pipeline for building and evaluating a dental QA benchmark from raw documents.
 
@@ -6,7 +12,7 @@ Supported question types:
 
 - `MCQ` — multiple-choice questions
 - `SAQ` — short-answer questions
-- `CBQ` — case-based questions (internally named `CaseReport`)
+- `CBQ` — case-based questions
 
 ## Layout
 
@@ -31,25 +37,19 @@ Install `pandoc` separately if you need Word/RTF/ODT/HTML conversion.
 
 ## Configure
 
-Edit `config/config.json` or use environment variables:
+- Edit `config/config.json` to set the model URLs and keys.
 
-```bash
-export OPENAI_API_KEY="your_api_key"
-export OPENAI_BASE_URL="https://api.openai.com/v1"
-export OPENAI_MODEL="your_model_name"
-```
+- For PDF/image OCR, set the local path to DeepSeek-OCR-2 weights:
 
-For PDF/image OCR, set the local path to DeepSeek-OCR-2 weights:
-
-```json
-{
-  "deepseek_ocr2": {
-    "runtime_root": "utils/deepseek_ocr2_runtime",
-    "model_path": "/path/to/DeepSeek-OCR-2",
-    "gpu_memory_utilization": 0.9
+  ```json
+  {
+    "deepseek_ocr2": {
+      "runtime_root": "utils/deepseek_ocr2_runtime",
+      "model_path": "/path/to/DeepSeek-OCR-2",
+      "gpu_memory_utilization": 0.9
+    }
   }
-}
-```
+  ```
 
 ## Usage
 
@@ -75,7 +75,7 @@ Stage 1 + 2 outputs (under `OUTPUT_ROOT`):
 
 ```text
 01_markdown_and_metadata/
-02_qa_outputs/qa_run_summary.json     # MCQ / SAQ / CaseReport top-level lists
+02_qa_outputs/qa_run_summary.json     # MCQ / SAQ / CBQ
 buffer/
 ```
 
