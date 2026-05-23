@@ -6,6 +6,12 @@
 </h3>
 </div>
 
+<div align="center">
+<h4>
+  📃 <a href="https://github.com/FreedomIntelligence/GlobalDentBench" target="_blank">Paper (Coming soon)</a> ｜ 📚 <a href="https://huggingface.co/datasets/FreedomIntelligence/GlobalDentBench-OA" target="_blank">GlobalDentBench OA</a>
+</h4>
+</div>
+
 A pipeline for building and evaluating a dental QA benchmark from raw documents.
 
 Supported question types:
