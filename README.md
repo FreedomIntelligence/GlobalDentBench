@@ -8,11 +8,12 @@
 
 <div align="center">
 <h4>
-  📃 <a href="https://github.com/FreedomIntelligence/GlobalDentBench" target="_blank">Paper (Coming soon)</a> ｜ 📚 <a href="https://huggingface.co/datasets/FreedomIntelligence/GlobalDentBench-OA" target="_blank">GlobalDentBench OA</a>
+  📃 <a href="https://github.com/FreedomIntelligence/GlobalDentBench" target="_blank">Paper (Coming soon)</a> ｜ 📚 <a href="https://huggingface.co/datasets/FreedomIntelligence/GlobalDentBench-OA" target="_blank">GlobalDentBench (OA)</a>
 </h4>
 </div>
 
-A pipeline for building and evaluating a dental QA benchmark from raw documents.
+## ⚡ Introduction
+Hello! Welcome to the repository for GlobalDentBench!
 
 Supported question types:
 
@@ -111,7 +112,9 @@ If you use this code or refer to our method, please cite our paper. This is very
 
 ## 📮 Contact
 
-If you have any questions, please contact us🧐: [zhenyangcai@link.cuhk.edu.cn][junjiezhao@connect.hku.hk]
+If you have any questions, please contact us🧐: [zhenyangcai@link.cuhk.edu.cn] or [junjiezhao@connect.hku.hk].
+
+Due to copyright restrictions, only an open-access (OA) version of GlobalDentBench is provided. If you require the full dataset, please contact us via email to receive the original materials directory, which you can download and process according to the pipeline.
 
 ## 📄 License
 This project is open-sourced under the MIT License.
