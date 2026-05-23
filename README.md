@@ -1,4 +1,4 @@
-# Towards Multimodal LLMs for Traditional Chinese Medicine
+# GlobalDentBench: A Multinational Benchmark for Evaluating LLM Clinical Reasoning in Dentistry with Expert Calibration
 
 <div align="center">
 <h3>
@@ -93,3 +93,19 @@ We are from:
 - Mayo Clinic 梅奥诊所
 - LMU University Hospital 德国慕尼黑大学医院 
 - Freedom AI 深圳自由动脉科技有限公司
+
+
+## ✨ Citation
+
+If you use this code or refer to our method, please cite our paper. This is very important for us🤩:
+
+> GlobalDentBench: A Multinational Benchmark for Evaluating LLM Clinical Reasoning in Dentistry with Expert Calibration.
+
+---
+
+## 📮 Contact
+
+If you have any questions, please contact us🧐: zhenyangcai@link.cuhk.edu.cn,junjie88@connect.hku.hk
+
+## 📄 License
+This project is open-sourced under the MIT License.
