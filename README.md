@@ -27,6 +27,75 @@ While LLMs show transformative potential in medical knowledge replication, real-
 
 ---
 
+## ⚙️ Installation and Configuration
+
+Install the environment.
+
+```bash
+pip install -r requirements.txt
+
+# Optional, only when running PDF/image OCR with the bundled DeepSeek-OCR2 runtime:
+pip install -r requirements-ocr.txt
+```
+
+*Note: Please install `pandoc` independently via your system package manager if you require Word/RTF/ODT/HTML document conversions.*
+
+1. Edit fields in `config/config.json` to configure target model endpoint URLs and access keys.
+2. For local PDF/image OCR capabilities, specify the path to your local DeepSeek-OCR-2 weights:
+
+```json
+{
+  "deepseek_ocr2": {
+    "runtime_root": "utils/deepseek_ocr2_runtime",
+    "model_path": "/path/to/DeepSeek-OCR-2",
+    "gpu_memory_utilization": 0.9
+  }
+}
+```
+
+---
+
+## 🚀 Usage
+
+### Option 1: Evaluate Your Model on GlobalDentBench-OA (Recommended)
+
+If you only want to benchmark your model on GlobalDentBench, simply download the Open-Access benchmark subset (**GlobalDentBench-OA**) from Hugging Face and run the evaluation pipeline.
+
+> **🔒 Copyright & Data Request Notice:** > Due to publishing copyright protections on authoritative textbooks and specific testing databases, access to the full raw source text corpus is restricted. **This repository provides an Open-Access (OA) test subset via HuggingFace**. If you require the full benchmark corpus for educational research, please email us to verify credentials and obtain the structural directory required for local pipeline compilation.
+
+```bash
+bash examples/03-evaluation.sh      # Run model inference and benchmark evaluation, please define the model name in config/config.json
+bash examples/04-riskAnalysis.sh    # Clinical risk analysis (S0/S1/S2)
+bash examples/05-resultAnalysis.sh  # Aggregate results by type / level / discipline
+```
+
+This workflow does **not** require running the benchmark construction pipeline.
+
+---
+
+### Option 2: Reproduce the Benchmark Construction Pipeline
+
+For researchers interested in reproducing the GlobalDentBench construction framework or building new domain-specific benchmarks, the complete construction pipeline is also provided.
+
+```bash
+bash examples/01-construction_pipeline.sh   # Raw Documents → Intermediate QA JSON
+bash examples/02-buildBenchmark.sh          # Intermediate QA JSON → Final benchmark file
+```
+
+The pipeline converts heterogeneous source documents (PDFs, XML files, images, textbooks, examinations, and case reports) into standardized benchmark samples with unified taxonomy and reasoning-level annotations.
+
+---
+
+### Generated Outputs (under your configured `OUTPUT_ROOT`)
+
+```text
+01_markdown_and_metadata/             # Cleaned markdown extractions & unified metadata
+02_qa_outputs/qa_run_summary.json     # Extracted MCQ / SAQ / CBQ candidates
+buffer/                               # Volatile processing files
+```
+
+---
+
 ## 📚 Benchmark Features
 
 GlobalDentBench evaluates LLMs through a multi-dimensional clinical lens, shifting evaluation metrics from superficial statistics to rigorous, patient-centric criteria.
@@ -92,60 +161,6 @@ config/config.json       # Runtime config template (no real secrets)
 data/                    # Prompt YAML references
 ```
 
-## ⚡ Installation
-
-```bash
-pip install -r requirements.txt
-
-# Optional, only when running PDF/image OCR with the bundled DeepSeek-OCR2 runtime:
-pip install -r requirements-ocr.txt
-
-```
-
-*Note: Please install `pandoc` independently via your system package manager if you require Word/RTF/ODT/HTML document conversions.*
-
----
-
-## ⚙️ Configuration
-
-1. Edit fields in `config/config.json` to configure target model endpoint URLs and access keys.
-2. For local PDF/image OCR capabilities, specify the path to your local DeepSeek-OCR-2 weights:
-
-```json
-{
-  "deepseek_ocr2": {
-    "runtime_root": "utils/deepseek_ocr2_runtime",
-    "model_path": "/path/to/DeepSeek-OCR-2",
-    "gpu_memory_utilization": 0.9
-  }
-}
-
-```
-
----
-
-## 🚀 Usage
-
-Execute scripts directly from the project root. Ensure you configure script-internal variables prior to execution.
-
-```bash
-bash examples/01-construction_pipeline.sh   # Raw Documents → Intermediate QA JSON
-bash examples/02-buildBenchmark.sh          # Intermediate QA JSON → Final benchmark file
-bash examples/03-evaluation.sh              # Benchmark Inference: Run target LLMs against questions
-bash examples/04-riskAnalysis.sh            # Safety analysis: Tag S0/S1/S2 clinical risk labels for CBQ
-bash examples/05-resultAnalysis.sh          # Summary analytics report broken down by type / level / discipline
-
-```
-
-### Generated Outputs (under your configured `OUTPUT_ROOT`):
-
-```text
-01_markdown_and_metadata/             # Cleaned markdown extractions & unified metadata
-02_qa_outputs/qa_run_summary.json     # Extracted MCQ / SAQ / CBQ candidates
-buffer/                               # Volatile processing files
-
-```
-
 ---
 
 ## 📖 About Us
@@ -155,13 +170,13 @@ This project is a collaborative effort brought together by:
 - Faculty of Dentistry, The University of Hong Kong 香港大学牙医学院
 - The Chinese University of Hong Kong, Shenzhen 香港中文大学（深圳）
 - Shenzhen Stomatology Hospital (Pingshan) of Southern Medical University 南方医科大学深圳口腔医院（坪山）
-- Shenzhen Loop Area Institute 深圳河套学院
 - Peking University 北京大学
 - Peking-Tsinghua Center for Life Sciences 北大清华生命科学联合中心
 - National Biomedical Imaging Center 国家生物医学成像中心
 - New Cornerstone Science Laboratory 新基石科学实验室
 - Mayo Clinic 梅奥诊所
-- LMU University Hospital 德国慕尼黑大学医院 
+- LMU University Hospital 德国慕尼黑大学医院
+- Shenzhen Loop Area Institute 深圳河套学院
 - Freedom AI 深圳自由动脉科技有限公司
 
 ---
@@ -170,8 +185,6 @@ This project is a collaborative effort brought together by:
 
 If you have any questions or are interested in collaborating, feel free to reach out via:
 📧 **zhenyangcai@link.cuhk.edu.cn** or **junjiezhao@connect.hku.hk**
-
-> **🔒 Copyright & Data Request Notice:** > Due to publishing copyright protections on authoritative textbooks and specific testing databases, access to the full raw source text corpus is restricted. **This repository provides an Open-Access (OA) test subset via HuggingFace**. If you require the full benchmark corpus for educational research, please email us to verify credentials and obtain the structural directory required for local pipeline compilation.
 
 ---
 
