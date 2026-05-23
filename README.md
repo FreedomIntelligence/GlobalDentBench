@@ -80,3 +80,12 @@ buffer/
 ```
 
 Stage 3 produces a single benchmark JSON; stage 4–5 add evaluation, risk, and analysis outputs alongside it.
+
+##  📖 About Us
+We are from:
+- The Chinese University of Hong Kong, Shenzhen 香港中文大学（深圳）
+- Faculty of Dentistry, The University of Hong Kong 香港大学牙医学院
+- Shenzhen Stomatology Hospital (Pingshan) of Southern Medical University 南方医科大学深圳口腔医院（坪山）
+- Freedom AI 深圳自由动脉科技有限公司
+
+特别鸣谢智谱华章科技提供支持。
