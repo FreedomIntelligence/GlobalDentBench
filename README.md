@@ -8,7 +8,7 @@
 
 <div align="center">
 <h4>
-  📃 <a href="https://github.com/FreedomIntelligence/GlobalDentBench" target="_blank">Paper (Coming soon)</a> ｜ 📚 <a href="https://huggingface.co/datasets/FreedomIntelligence/FreedomIntelligence/GlobalDentBench-OA" target="_blank">GlobalDentBench (OA)</a>
+  📃 <a href="https://github.com/FreedomIntelligence/GlobalDentBench" target="_blank">Paper (Coming soon)</a> ｜ 🤗 <a href="https://huggingface.co/datasets/FreedomIntelligence/GlobalDentBench-OA" target="_blank">GlobalDentBench (OA)</a>
 </h4>
 </div>
 
@@ -16,14 +16,14 @@
 
 ## ⚡ Introduction
 
-Hello! Welcome to the repository for **GlobalDentBench**, the first multinational and full-spectrum dental benchmark designed to evaluate the clinical reasoning robustness and safety of Large Language Models (LLMs) in dentistry.
+Hello! Welcome to the repository for **GlobalDentBench**, a multinational and full-spectrum dental benchmark designed to evaluate the clinical reasoning robustness and safety of Large Language Models (LLMs) in dentistry.
 
 <div align=center>
 <img src="assets/figure1_benchmark_overview.jpg" width = "80%" alt="GlobalDentBench Overview" align=center/>
 <p><em>Figure 1: Overview of GlobalDentBench covering global sources, 3 reasoning levels, 14 dental disciplines, and 3 data types.</em></p>
 </div>
 
-While LLMs show transformative potential in medical knowledge replication, real-world clinical environments demand higher cognitive reasoning under high stakes. **GlobalDentBench** bridges the gap between closed-form factual recall and authentic clinical decision-making through **8,978 expert-validated questions** across **14 dental specialties**, spanning **88 countries and regions** across 6 continents.
+While LLMs show transformative potential in medical knowledge replication, real-world clinical environments demand higher cognitive reasoning under high stakes. **GlobalDentBench** bridges the gap between closed-form factual recall and authentic clinical decision-making through **8,978 questions** across **14 dental specialties**, spanning **88 countries and regions** across 6 continents. To ensure clinical validity and consistency, the benchmark was calibrated and verified by **6 senior dentists** with an average of **6.8 years of clinical practice**, contributing a total of **297 person-hours** of expert review and validation.
 
 ---
 
