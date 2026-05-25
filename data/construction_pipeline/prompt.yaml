@@ -1,5 +1,4 @@
 ﻿# Construction pipeline prompts.
-# Runtime prompts are mirrored in construction_pipeline/02-QA_Generation.py.
 
 casequestion_extract_seed_qa_prompts:
   unified_extraction:
