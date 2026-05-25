@@ -146,7 +146,6 @@ def evaluate_cbq_risk(item: Dict, model_result: Dict, judge_config: str, prompts
     gold_answer = build_key_point_block(item.get("key_points", []))
     answer = model_result.get("answer", "") if isinstance(model_result, dict) else ""
     prompt = prompt_config["user_template"].format(
-        rubric=prompt_config["rubric"],
         case_context=case_context,
         gold_answer=gold_answer,
         answer=answer,
