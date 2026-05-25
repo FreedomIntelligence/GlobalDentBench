@@ -142,16 +142,19 @@ def evaluate_mcq(item: Dict, model_config: str, prompts: Dict, timeout: int) -> 
 
 
 def evaluate_saq(item: Dict, model_config: str, judge_config: str, prompts: Dict, timeout: int) -> Dict:
-    test_prompt = prompts["saq_evaluation_prompts"]["test_llm"]["user_template"].format(
+    test_cfg = prompts["saq_evaluation_prompts"]["test_llm"]
+    judge_cfg = prompts["saq_evaluation_prompts"]["judge_llm"]
+    test_prompt = test_cfg["user_template"].format(
         cleaned_text=item.get("question", "")
     )
     answer = call_gpt(
         prompt=test_prompt,
         config_type=model_config,
+        system_prompt=test_cfg.get("system_prompt"),
         json_output=False,
         timeout=timeout,
     )
-    judge_prompt = prompts["saq_evaluation_prompts"]["judge_llm"]["user_template"].format(
+    judge_prompt = judge_cfg["user_template"].format(
         question=item.get("question", ""),
         answer=item.get("answer", ""),
         model_answer=answer,
@@ -160,7 +163,7 @@ def evaluate_saq(item: Dict, model_config: str, judge_config: str, prompts: Dict
         prompt=judge_prompt,
         config_type=judge_config,
         json_output=True,
-        system_prompt="Return valid JSON only.",
+        system_prompt=judge_cfg.get("system_prompt"),
         timeout=timeout,
     )
     return {
@@ -171,16 +174,19 @@ def evaluate_saq(item: Dict, model_config: str, judge_config: str, prompts: Dict
 
 def evaluate_cbq(item: Dict, model_config: str, judge_config: str, prompts: Dict, timeout: int) -> Dict:
     question_text = item.get("seed_question", {}).get("question", "")
-    test_prompt = prompts["casequestion_evaluation_prompts"]["test_llm"]["user_template"].format(
+    test_cfg = prompts["casequestion_evaluation_prompts"]["test_llm"]
+    judge_cfg = prompts["casequestion_evaluation_prompts"]["judge_llm"]
+    test_prompt = test_cfg["user_template"].format(
         question_text=question_text
     )
     answer = call_gpt(
         prompt=test_prompt,
         config_type=model_config,
+        system_prompt=test_cfg.get("system_prompt"),
         json_output=False,
         timeout=timeout,
     )
-    judge_prompt = prompts["casequestion_evaluation_prompts"]["judge_llm"]["user_template"].format(
+    judge_prompt = judge_cfg["user_template"].format(
         question_text=question_text,
         kp_block=build_key_point_block(item.get("key_points", [])),
         model_answer=answer,
@@ -189,7 +195,7 @@ def evaluate_cbq(item: Dict, model_config: str, judge_config: str, prompts: Dict
         prompt=judge_prompt,
         config_type=judge_config,
         json_output=True,
-        system_prompt="Return valid JSON only.",
+        system_prompt=judge_cfg.get("system_prompt"),
         timeout=timeout,
     )
     return {
