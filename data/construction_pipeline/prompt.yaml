@@ -4,17 +4,17 @@
 casequestion_extract_seed_qa_prompts:
   unified_extraction:
     system_prompt: |-
-      You are a senior dental clinician tasked with crafting benchmark-grade case-based clinical reasoning questions from dental case reports for LLM evaluation. Adhere to ALL instructions precisely. Every output must: 1) Stay 100% faithful to the provided case report (no external facts). 2) Craft exactly ONE seed question about the central documented diagnosis, treatment decision, management rationale, complication, or outcome in the case. 3) Provide exactly 5 source-grounded key points that directly support the expected answer. 4) Use PRECISE and CONCISE language that is easy to understand. 5) Redact any patient-identifiable information. 6) Do not add clinical recommendations beyond what the case report explicitly supports. 7) Ensure outputs stand alone (benchmark users will NOT see the original paper). Return results strictly in valid JSON format.
-    user_template: |-
-      Analyze the following dental case report and complete ALL requested items in a single response.
-
-      INPUT CASE REPORT:
-      {content}
-
-      OBJECTIVES:
-      1. Produce exactly ONE "seed_question" that asks about a central documented clinical reasoning point in this case report.
-      2. Produce exactly {key_point_count} "key_points" that directly support the expected answer using only source-grounded case facts.
-
+      You are a senior dental clinician tasked with crafting benchmark-grade case-based clinical reasoning questions from dental case reports for LLM evaluation. Adhere to ALL instructions precisely. 
+      
+      Every output must: 
+      1) Stay 100% faithful to the provided case report (no external facts). 
+      2) Craft exactly ONE seed question about the central documented diagnosis, treatment decision, management rationale, complication, or outcome in the case. 
+      3) Provide the requested number of source-grounded key points that directly support the expected answer. 
+      4) Use PRECISE and CONCISE language that is easy to understand. 
+      5) Redact any patient-identifiable information. 
+      6) Do not add clinical recommendations beyond what the case report explicitly supports. 
+      7) Ensure outputs stand alone (benchmark users will NOT see the original paper). 
+      
       === SEED QUESTION REQUIREMENTS ===
       - Self-contained: Include only patient demographics, presentation, diagnostics, history, procedures, and outcomes that are explicitly stated in the source.
       - Do not invent missing details. If the source does not report a detail, omit it rather than guessing.
@@ -27,13 +27,11 @@ casequestion_extract_seed_qa_prompts:
       - Explain why this is a clinically meaningful reasoning point for this case.
 
       === KEY POINT REQUIREMENTS ===
-      For each of the {key_point_count} key points:
       - Quote or paraphrase ONLY information present in the case report.
       - Reference the exact section title, heading, table, figure caption, or nearby Markdown cue where the point appears. Do not invent paragraph numbers.
       - Explain how the point supports the expected answer to the seed question.
       - Collectively cover the most relevant evidence for the question, such as presentation, diagnostics, etiology, treatment rationale, procedure details, complications, follow-up, and outcome. Include systemic modifiers or patient-centered considerations only when they are explicitly reported.
       - Use precise, concise language that is easy to understand.
-
 
       === OUTPUT FORMAT ===
       Return valid JSON only in the following structure:
@@ -51,22 +49,20 @@ casequestion_extract_seed_qa_prompts:
               }
           ]
       }
+    user_template: |-
+      Analyze the following dental case report and complete ALL requested items in a single response based on your system instructions.
+
+      OBJECTIVES:
+      1. Produce exactly ONE "seed_question" that asks about a central documented clinical reasoning point in this case report.
+      2. Produce exactly {key_point_count} "key_points" that directly support the expected answer using only source-grounded case facts.
+
+      INPUT CASE REPORT:
+      {content}
 
 casequestion_validate_qa_prompts:
   benchmark_validation:
     system_prompt: |-
-      You are a senior dental education quality assessor. Your job is to rigorously audit open-ended benchmark questions (seed question + key points) before they enter evaluation suites. Judge each item on correctness/traceability, difficulty, and answerability using only the provided source document. Be strict, cite concrete reasons, and return results strictly in JSON format.
-    user_template: |-
-      You are a HIGHLY CRITICAL senior dental education assessor.
-
-      === SOURCE DOCUMENT CONTENT ===
-      {md_content}
-
-      === QUESTION UNDER REVIEW ===
-      {seed_question}
-
-      === CLAIMED KEY POINTS (EXPECTED ANSWER ELEMENTS) ===
-      {key_points}
+      You are a HIGHLY CRITICAL senior dental education quality assessor. Your job is to rigorously audit open-ended benchmark questions (seed question + key points) before they enter evaluation suites. Judge each item on correctness/traceability, difficulty, and answerability using only the provided source document. Be strict, cite concrete reasons, and return results strictly in JSON format.
 
       === EVALUATION CRITERIA (STRICT MODE) ===
 
@@ -87,12 +83,11 @@ casequestion_validate_qa_prompts:
 
       3. **ANSWERABILITY (Clarity & Unambiguity)**:
          - Stem must be self-contained enough for benchmark users who will not see the original paper
-         - The expected answer must be recoverable from the five key points
+         - The expected answer must be recoverable from the provided key points
          - Real-world alternative treatments or diagnoses do NOT cause failure if the question clearly asks for the documented case-based rationale
          - Vague, multi-task, or internally conflicting stems = FAIL
 
-      === YOUR TASK ===
-      Evaluate whether the QUESTION + KEY POINTS satisfy all three criteria using only the SOURCE DOCUMENT. Cite concrete reasons for every score.
+      === OUTPUT FORMAT ===
       Return JSON format:
       {
           "correctness": {
@@ -108,6 +103,17 @@ casequestion_validate_qa_prompts:
               "reasoning": "Assessment of clarity and potential for expert consensus"
           }
       }
+    user_template: |-
+      Evaluate whether the QUESTION + KEY POINTS satisfy all three criteria (Correctness, Difficulty, Answerability) using ONLY the SOURCE DOCUMENT. Cite concrete reasons for every score.
+
+      === SOURCE DOCUMENT CONTENT ===
+      {md_content}
+
+      === QUESTION UNDER REVIEW ===
+      {seed_question}
+
+      === CLAIMED KEY POINTS (EXPECTED ANSWER ELEMENTS) ===
+      {key_points}
 
 tag:
   question_tagging_for_caserepo:
@@ -163,8 +169,10 @@ tag:
       8
       L2
     user_template: |-
-      Please analyze the following dental question:
+      Please analyze the following dental question and assign the appropriate tags based on your system guidelines:
+
       {question_text}
+      
   question_tagging_for_saq_or_mcq:
     system_prompt: |-
       You are a professional dental education assessment expert. Your task is to analyze dental exam questions and assign them two key tags.
@@ -209,8 +217,8 @@ tag:
       - L2: The question can be answered mainly based on the core clinical findings of the case; individualized patient factors are not essential to the final answer.
       - L3: Individualized patient factors are required to answer the question; without considering them, the final judgment would be incomplete, inaccurate, or clinically inappropriate.
 
-      ## Ground Truth
-      You will also be provided with the ground truth answer. Use this to better understand the question's context and difficulty level, but make your own independent assessment.
+      ## Ground Truth Handling
+      You will be provided with the ground truth answer. Use this to better understand the question's context and difficulty level, but make your own independent assessment of the reasoning level and discipline based on the guidelines above.
 
       ## Response Format (Brief!)
       Only respond with two lines, one answer per line:
@@ -221,6 +229,10 @@ tag:
       8
       L2
     user_template: |-
-      Please analyze the following dental question and its ground truth answer:
+      Please analyze the following dental question and its ground truth answer to assign the appropriate tags based on your system guidelines:
+      
+      QUESTION:
       {question}
+
+      GROUND TRUTH ANSWER:
       {answer}
