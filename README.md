@@ -193,7 +193,15 @@ If you have any questions or are interested in collaborating, feel free to reach
 If you find this benchmark helpful, or use this pipeline framework to evaluate other clinical subfields, please kindly cite our work:
 
 ```bibtex
-coming soon~
+@misc{zhao2026globaldentbench,
+      title={GlobalDentBench: A Multinational Benchmark for Evaluating LLM Clinical Reasoning in Dentistry with Expert Calibration}, 
+      author={Junjie Zhao and Jingyi Liang and Zhenyang Cai and Jiaming Zhang and Zhenwei Wen and Shuzhi Deng and Wenjing Yi and Chunfeng Luo and Hexian Zhang and Junying Chen and Tianrui Liu and Zhuhui Bai and Zixu Zhang and Pradeep Singh and Xiang Liu and Jianquan Li and Nhan L Tran and Falk Schwendicke and Zuolin Jin and Lijian Jin and Liangyi Chen and Wei-fa Yang and Benyou Wang and Junwen Wang and Shan Jiang},
+      year={2026},
+      eprint={2605.24636},
+      archivePrefix={arXiv},
+      primaryClass={cs.AI},
+      url={https://arxiv.org/abs/2605.24636}, 
+}
 ```
 
 ---
