@@ -8,7 +8,7 @@
 
 <div align="center">
 <h4>
-  📃 <a href="https://github.com/FreedomIntelligence/GlobalDentBench" target="_blank">Paper (Coming soon)</a> ｜ 🤗 <a href="https://huggingface.co/datasets/FreedomIntelligence/GlobalDentBench-OA" target="_blank">GlobalDentBench (OA)</a>
+  📃 <a href="https://arxiv.org/abs/2605.24636" target="_blank">Paper</a> ｜ 🤗 <a href="https://huggingface.co/datasets/FreedomIntelligence/GlobalDentBench-OA" target="_blank">GlobalDentBench (OA)</a>
 </h4>
 </div>
 
